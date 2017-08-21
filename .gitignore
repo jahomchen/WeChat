@@ -133,3 +133,5 @@ _Pvt_Extensions/
 ModelManifest.xml
 *.orig
 I360.EP/Beisen.I360.Enterprise.Web/Web.config.orig
+/JahomWeChat/obj
+/JahomWeChat/bin
