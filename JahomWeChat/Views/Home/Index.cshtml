@@ -1,0 +1,21 @@
+﻿@{
+    ViewBag.Title = "Home";
+}
+
+<div class="jumbotron">
+    <h2>所有故事</h2>
+    <p class="lead">我们的开始 是最长的电影.</p>
+</div>
+
+<div class="row">
+@{var records = ViewBag.records as List<JahomWeChat.Models.ViewModel.RecordSummary>;
+    foreach (var record in records)
+    {
+        <div class="col-md-4">
+            <h2>@record.Title</h2>
+            <p>@record.Summary</p>
+            <p><a class="btn btn-default" href="~/Home/RecordDetail?recordId=@record.ID">查看更多 &raquo;</a></p>
+        </div>
+    }
+}
+</div>

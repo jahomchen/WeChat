@@ -1,0 +1,15 @@
+﻿
+@{
+    ViewBag.Title = "RecordDetail";
+    var record = ViewBag.record as JahomWeChat.Models.EntityModel.Record;
+}
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">@record.Title</h3>
+    </div>
+    <div class="panel-body">
+        @record.Content
+    </div>
+</div>
+

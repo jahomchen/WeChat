@@ -1,0 +1,54 @@
+﻿
+@{
+    Layout = null;
+}
+
+<meta charset="utf-8">
+<link href="../../content/adduser/style.css" rel='stylesheet' type='text/css' />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script type="application/x-javascript">
+    addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); }
+</script>
+
+<h2>AddUser</h2>
+
+<div class="main">
+    <div class="header">
+        <h2>您好，第一次关注请输入个人信息</h2>
+    </div>
+
+    <form method="post">
+        <ul class="left-form">
+            <h2>New Account:</h2>
+            <li>
+                <input type="text" name="UserName" placeholder="昵称" required />
+                <div class="clear"> </div>
+            </li>
+            <li>
+                <input type="text" name="Email" placeholder="邮箱" />
+                <div class="clear"> </div>
+            </li>
+            <li>
+                <input type="text" name="Sign" placeholder="签名"  />
+                <div class="clear"> </div>
+            </li>
+            <li>
+                <input type="text" name="Tips" placeholder="标签以空格分割"  />
+                <div class="clear"> </div>
+            </li>
+            <li>
+                <select name="Gender">
+                    <option value="1">男</option>
+                    <option value="0">女</option>
+                </select>
+                <div class="clear"> </div>
+            </li>
+            <input type="hidden" name="OpenId" value="@ViewBag.openId" />
+            <input type="submit" value="Create Account">
+            <div class="clear"> </div>
+        </ul>
+        <div class="clear"> </div>
+
+    </form>
+
+</div>
