@@ -33,6 +33,7 @@ namespace JahomWeChat.Controllers
 
 		[HttpPost]
 		[GetUser]
+		[ValidateInput(false)]
 		public JsonResult AddSomething(Record record)
 		{
 			try
