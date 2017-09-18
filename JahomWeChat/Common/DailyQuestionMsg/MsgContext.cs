@@ -25,7 +25,7 @@ namespace JahomPersonalWechat.Common.DailyQuestionMsg
 				{
 					return sendMsg.Send();
 				}
-				System.Threading.Thread.Sleep(60000);
+				System.Threading.Thread.Sleep(55000);
 			}
 		}
 	}

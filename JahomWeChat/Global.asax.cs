@@ -30,7 +30,7 @@ namespace JahomWeChat
 				while (true)
 				{
 					msgContext.Process();
-					Thread.Sleep(60000 * 1430);
+					Thread.Sleep(60000 * 1435);
 				}
 			});
 		}
