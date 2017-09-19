@@ -30,7 +30,8 @@ namespace JahomPersonalWechat.Common.DailyQuestionMsg
 			}
 			if (record != null)
 			{
-				templateMsgContent.SendDataInfo = new SendDataInfo() { OpenId = openId, Url = "http://www.jahom.site/home/RecordDetail?recordId=" + record.ID, UserId = user.ID };
+				templateMsgContent.OpenId = OpenId;
+				templateMsgContent.Url = "http://www.jahom.site/home/RecordDetail?recordId=" + record.ID;
 				templateMsgContent.Template_id = Template_id;
 				templateMsgContent.DicFirst = new Dictionary<string, string>();
 				templateMsgContent.DicFirst.Add("内容精选\\n", "#173177");

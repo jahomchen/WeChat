@@ -56,16 +56,17 @@ namespace JahomPersonalWechat.Common.DailyQuestionMsg
 		protected List<string> ExcuteSend()
 		{
 			List<string> result = new List<string>();
+			
+			string responseContent = string.Empty;
+			string url = string.Format(urlSendTemplateMsg, AccessTokenManage.GetAccessTokenName());
+
 			string first = @"first"": {""value"":""#"",""color"":""$"" },";
 			string keynote = @"""keyword1"":{""value"":""#"", ""color"":""$"" }";
 			string sendTemplateMsgContent = @"{ ""touser"":""$"",""template_id"":""#"",""url"":""%"",""data"":{""*""}}";
-			string responseContent = string.Empty;
-			string url = string.Format(urlSendTemplateMsg, AccessTokenManage.GetAccessTokenName());
 			first = first.Replace("#", templateMsgContent.DicFirst.First().Key).Replace("$", templateMsgContent.DicFirst.First().Value);
 			keynote = keynote.Replace("#", templateMsgContent.DicKeynote.First().Key).Replace("$", templateMsgContent.DicKeynote.First().Value);
 			string dataTemp = first + keynote;
-
-			string sendTemplateMsg = sendTemplateMsgContent.Replace("$", templateMsgContent.SendDataInfo.OpenId).Replace("#", templateMsgContent.Template_id).Replace("%", templateMsgContent.SendDataInfo.Url).Replace("*", dataTemp);
+			string sendTemplateMsg = sendTemplateMsgContent.Replace("$", templateMsgContent.OpenId).Replace("#", templateMsgContent.Template_id).Replace("%", templateMsgContent.Url).Replace("*", dataTemp);
 			sendTemplateMsg = sendTemplateMsg.Remove(sendTemplateMsg.LastIndexOf('"'), 1).Remove(sendTemplateMsg.LastIndexOf(','), 1);
 			HttpManager.Request(url, out responseContent, WebRequestMethods.Http.Post, data: sendTemplateMsg);
 			while (responseContent.Contains("40001"))//token失效码

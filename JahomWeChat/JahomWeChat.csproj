@@ -157,7 +157,6 @@
     <Compile Include="Models\EntityModel\Reply.cs" />
     <Compile Include="Models\EntityModel\User.cs" />
     <Compile Include="Models\ResultMsg.cs" />
-    <Compile Include="Models\SendDataInfo.cs" />
     <Compile Include="Models\TemplateMsgContent.cs" />
     <Compile Include="Models\Ticket.cs" />
     <Compile Include="Models\ViewModel\RecordSummary.cs" />
