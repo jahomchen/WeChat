@@ -62,6 +62,7 @@ namespace JahomWeChat.Controllers
 		public ActionResult MyStory()
 		{
 			var user = HttpContext.Items["USER"] as User;
+			ViewBag.Sign = user.Sign;
 			var records = jahomDBContext.Record.Where(r => r.UserId == user.ID && r.IsCompleted).
 				OrderByDescending(r => r.ModifyTime).Select(r => (new RecordSummary() { ID = r.ID, Title = r.Title, Summary = r.Summary })).ToList();
 			ViewBag.records = records;
@@ -90,7 +91,22 @@ namespace JahomWeChat.Controllers
 		{
 			var record = jahomDBContext.Record.FirstOrDefault(r => r.ID == recordId);
 			ViewBag.record = record;
+			var replys = jahomDBContext.Reply.Where(r => r.RecordId == record.ID).ToList();
+			ViewBag.Relpys = replys;
 			return View();
+		}
+
+		public ActionResult AddReply(Reply reply)
+		{
+			var user = HttpContext.Items["USER"] as User;
+			reply.FromUserId = user.ID;
+			reply.FromUserName = user.UserName;
+			reply.CreateTime = DateTime.Now;
+			reply.ModifyTime = DateTime.Now;
+			jahomDBContext.Reply.Add(reply);
+			jahomDBContext.SaveChanges();
+
+			return RedirectToRoute(new { controller = "Home", action = "RecordDetail", recordId = reply.RecordId });
 		}
 	}
 }
