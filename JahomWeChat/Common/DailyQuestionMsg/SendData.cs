@@ -1,5 +1,6 @@
 ﻿using JahomWeChat.DataAccess;
 using JahomWeChat.Models;
+using JahomWeChat.Models.EntityModel;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -21,8 +22,16 @@ namespace JahomPersonalWechat.Common.DailyQuestionMsg
 		protected override List<string> SendCore(string openId)
 		{
 			var user = jahomDBContext.User.FirstOrDefault(u => u.OpenId == openId);
+			var userTips = user.Tips.Split(' ');
+			Record record = null;
+			var recordForUser = new List<Record>();
+
 			var records = jahomDBContext.Record;
-			var record = records.FirstOrDefault(r => r.Tips.Contains(user.Tips));
+			foreach (var uTip in userTips)
+			{
+				recordForUser.AddRange(records.Where(r => r.Tips.Contains(user.Tips)));
+			}
+		
 			if (record == null)
 			{
 				var random = new Random().Next(0, records.Count() - 1);
