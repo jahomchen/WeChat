@@ -51,7 +51,7 @@ namespace JahomWeChat.Common
 			JahomDBContext jahomDBContext = new JahomDBContext();
 
 			var userStr = CookieHelper.GetCookie(context);
-			if (string.IsNullOrEmpty(code) || !string.IsNullOrEmpty(userStr))
+			if (string.IsNullOrEmpty(code))
 			{
 				return JsonConvert.DeserializeObject<User>(userStr);
 			}

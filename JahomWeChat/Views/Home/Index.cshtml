@@ -13,7 +13,7 @@
     {
         <div class="col-md-4">
             <h2>@record.Title</h2>
-            <p>@record.Summary</p>
+            <p>@Html.Raw(record.Summary)</p>
             <p><a class="btn btn-default" href="~/Home/RecordDetail?recordId=@record.ID">查看更多 &raquo;</a></p>
         </div>
     }

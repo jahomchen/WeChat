@@ -1,13 +1,17 @@
-﻿using JahomWeChat.Models;
+﻿using JahomWeChat.DataAccess;
+using JahomWeChat.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace JahomPersonalWechat.Common.DailyQuestionMsg
 {
 	public class SendData : BaseSend
 	{
+		JahomDBContext jahomDBContext = new JahomDBContext();
+
 		public SendData(string openId = null, string templateId = null)
 		{
 			OpenId = openId;
@@ -16,18 +20,22 @@ namespace JahomPersonalWechat.Common.DailyQuestionMsg
 
 		protected override List<string> SendCore(string openId)
 		{
-			var dataInfos = new List<SendDataInfo>() { new SendDataInfo() { OpenId = openId } };//TODO 数据库获取数据。
-			if (dataInfos != null)
+			var user = jahomDBContext.User.FirstOrDefault(u => u.OpenId == openId);
+			var records = jahomDBContext.Record;
+			var record = records.FirstOrDefault(r => r.Tips.Contains(user.Tips));
+			if (record == null)
 			{
-				templateMsgContent.OpenIdRealList = new List<SendDataInfo>();
-				templateMsgContent.OpenIdRealList.AddRange(dataInfos);
+				var random = new Random().Next(0, records.Count() - 1);
+				record = records.OrderBy(c => c.CreateTime).Skip(random).Take(1).FirstOrDefault();
+			}
+			if (record != null)
+			{
+				templateMsgContent.SendDataInfo = new SendDataInfo() { OpenId = openId, Url = "http://www.jahom.site/home/RecordDetail?recordId=" + record.ID, UserId = user.ID };
 				templateMsgContent.Template_id = Template_id;
 				templateMsgContent.DicFirst = new Dictionary<string, string>();
-				templateMsgContent.DicFirst.Add("新消息通知\\n", "#173177");
-				templateMsgContent.DicKeynote1 = new Dictionary<string, string>();
-				templateMsgContent.DicKeynote1.Add(" 你收到了一个新的通知，赶紧打开吧\\n", "#173177");
-				templateMsgContent.DicKeynote2 = new Dictionary<string, string>();
-				templateMsgContent.DicKeynote2.Add(DateTime.Now.ToString("yyyy-MM-dd"), "#173177");
+				templateMsgContent.DicFirst.Add("内容精选\\n", "#173177");
+				templateMsgContent.DicKeynote = new Dictionary<string, string>();
+				templateMsgContent.DicKeynote.Add(string.Format("{0}\\n", record.Title), "#173177");
 
 				return ExcuteSend();
 			}

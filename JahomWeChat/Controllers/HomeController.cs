@@ -34,7 +34,7 @@ namespace JahomWeChat.Controllers
 		[HttpPost]
 		[GetUser]
 		[ValidateInput(false)]
-		public JsonResult AddSomething(Record record)
+		public ActionResult AddSomething(Record record)
 		{
 			try
 			{
@@ -52,10 +52,9 @@ namespace JahomWeChat.Controllers
 			{
 				Logger.Error(ex.Message);
 				Logger.Error(ex.StackTrace);
-				return Json(new ResultMsg() { IsSuccess = false, Msg = ex.Message });
 			}
 
-			return Json(new ResultMsg() { IsSuccess = true, Msg = record.ID.ToString() });
+			return RedirectToAction("MyStory");
 		}
 
 		[GetUser]
@@ -87,6 +86,7 @@ namespace JahomWeChat.Controllers
 			return RedirectToAction("Index");
 		}
 
+		[GetUser]
 		public ActionResult RecordDetail(Guid recordId)
 		{
 			var record = jahomDBContext.Record.FirstOrDefault(r => r.ID == recordId);
