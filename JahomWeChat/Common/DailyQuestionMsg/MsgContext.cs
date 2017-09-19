@@ -18,10 +18,11 @@ namespace JahomPersonalWechat.Common.DailyQuestionMsg
 		public List<string> Process()
 		{
 			string sendTimeHour = System.Web.Configuration.WebConfigurationManager.AppSettings["sendTimeHour"];
+			string sendTimeMinite = System.Web.Configuration.WebConfigurationManager.AppSettings["sendTimeMinite"];
 			while (true)
 			{
 				var now = DateTime.Now;
-				if (now.Hour.ToString() == sendTimeHour && now.Minute == 0)
+				if (now.Hour.ToString() == sendTimeHour && now.Minute.ToString() == sendTimeMinite)
 				{
 					return sendMsg.Send();
 				}
