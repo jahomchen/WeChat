@@ -7,8 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JahomPersonalWechat.Common.DailyQuestionMsg
 {
@@ -18,8 +16,6 @@ namespace JahomPersonalWechat.Common.DailyQuestionMsg
 
 		public string Template_id = ConstString.DefaultTemplateId;
 		public TemplateMsgContent templateMsgContent = new TemplateMsgContent();
-		public string OpenId { get; set; }
-		JahomDBContext jahomDBContext = new JahomDBContext();
 
 		public void Send()
 		{
@@ -34,14 +30,7 @@ namespace JahomPersonalWechat.Common.DailyQuestionMsg
 					lsOpenId.Add(Jarows[i].ToString());
 				}
 
-				if (string.IsNullOrEmpty(OpenId))
-				{
-					lsOpenId.ForEach(p => SendCore(p));
-				}
-				else
-				{
-					SendCore(lsOpenId.FirstOrDefault(p => p.ToLower() == OpenId.ToLower()));
-				}
+				lsOpenId.ForEach(p => SendCore(p));
 			}
 			catch (Exception ex)
 			{
@@ -65,7 +54,7 @@ namespace JahomPersonalWechat.Common.DailyQuestionMsg
 			keynote = keynote.Replace("#", templateMsgContent.DicKeynote.First().Key).Replace("$", templateMsgContent.DicKeynote.First().Value);
 			string dataTemp = first + keynote;
 			string sendTemplateMsg = sendTemplateMsgContent.Replace("$", templateMsgContent.OpenId).Replace("#", templateMsgContent.Template_id).Replace("%", templateMsgContent.Url).Replace("*", dataTemp);
-			sendTemplateMsg = sendTemplateMsg.Remove(sendTemplateMsg.LastIndexOf('"'), 1).Remove(sendTemplateMsg.LastIndexOf(','), 1);
+			sendTemplateMsg = sendTemplateMsg.Remove(sendTemplateMsg.LastIndexOf('"'), 1);
 			HttpManager.Request(url, out responseContent, WebRequestMethods.Http.Post, data: sendTemplateMsg);
 			if (responseContent.Contains("40001"))//token失效码
 			{
