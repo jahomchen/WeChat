@@ -72,6 +72,11 @@ namespace JahomWeChat.Common
 			}
 		}
 
+		public static string GetRecordSummary(string recordContent)
+		{
+			return recordContent.Substring(0, 10);
+		}
+
 		#region 私有方法
 
 		static string GetValueByTagName(XmlDocument postObj, string tagName)

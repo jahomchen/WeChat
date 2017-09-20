@@ -42,7 +42,7 @@ namespace JahomWeChat.Controllers
 				record.IsCompleted = true;
 				record.UserId = user.ID;
 				record.UserName = user.UserName;
-				record.Summary = record.Content.Substring(0, 10);
+				record.Summary = ControllerHelper.GetRecordSummary(record.Content);
 				record.CreateTime = DateTime.Now;
 				record.ModifyTime = DateTime.Now;
 				jahomDBContext.Record.Add(record);
@@ -109,5 +109,48 @@ namespace JahomWeChat.Controllers
 
 			return RedirectToRoute(new { controller = "Home", action = "RecordDetail", recordId = reply.RecordId });
 		}
+
+
+		[HttpGet]
+		public ActionResult Admin(string key)
+		{
+			if (key == "jahom")
+			{
+				var admin = jahomDBContext.User.FirstOrDefault(u => u.OpenId == ConstString.AdminOpenId);
+				CookieHelper.SetCookie(HttpContext, JsonConvert.SerializeObject(admin));
+				return View("");
+			}
+			else
+			{
+				return Content("error");
+			}
+		}
+
+		[HttpPost]
+		public ActionResult AddRecordByAdmin(Record record)
+		{
+			var adminStr = CookieHelper.GetCookie(HttpContext);
+			if (!string.IsNullOrEmpty(adminStr))
+			{
+				var admin = JsonConvert.DeserializeObject<User>(adminStr);
+				record.IsCompleted = true;
+				record.UserId = admin.ID;
+				record.UserName = admin.UserName;
+				record.Summary = ControllerHelper.GetRecordSummary(record.Content);
+				record.CreateTime = DateTime.Now;
+				record.ModifyTime = DateTime.Now;
+				jahomDBContext.Record.Add(record);
+				jahomDBContext.SaveChanges();
+
+				var records = jahomDBContext.Record.OrderBy(r => r.CreateTime).ToList();
+				ViewBag.Records = records;
+				return View();
+			}
+			else
+			{
+				return Content("error");
+			}
+		}
+
 	}
 }
