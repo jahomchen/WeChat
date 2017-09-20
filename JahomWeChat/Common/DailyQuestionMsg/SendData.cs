@@ -31,24 +31,22 @@ namespace JahomPersonalWechat.Common.DailyQuestionMsg
 			{
 				recordForUser.AddRange(records.Where(r => r.Tips.Contains(user.Tips)));
 			}
-		
+
 			if (record == null)
 			{
 				var random = new Random().Next(0, records.Count() - 1);
 				record = records.OrderBy(c => c.CreateTime).Skip(random).Take(1).FirstOrDefault();
 			}
-			if (record != null)
-			{
-				templateMsgContent.OpenId = OpenId;
-				templateMsgContent.Url = "http://www.jahom.site/home/RecordDetail?recordId=" + record.ID;
-				templateMsgContent.Template_id = Template_id;
-				templateMsgContent.DicFirst = new Dictionary<string, string>();
-				templateMsgContent.DicFirst.Add("内容精选\\n", "#173177");
-				templateMsgContent.DicKeynote = new Dictionary<string, string>();
-				templateMsgContent.DicKeynote.Add(string.Format("{0}\\n", record.Title), "#173177");
 
-				ExcuteSend();
-			}
+			templateMsgContent.OpenId = OpenId;
+			templateMsgContent.Url = "http://www.jahom.site/home/RecordDetail?recordId=" + record.ID;
+			templateMsgContent.Template_id = Template_id;
+			templateMsgContent.DicFirst = new Dictionary<string, string>();
+			templateMsgContent.DicFirst.Add("内容精选\\n", "#173177");
+			templateMsgContent.DicKeynote = new Dictionary<string, string>();
+			templateMsgContent.DicKeynote.Add(string.Format("{0}\\n", record.Title), "#173177");
+
+			ExcuteSend();
 		}
 	}
 }
