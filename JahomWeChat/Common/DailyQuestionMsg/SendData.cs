@@ -1,8 +1,5 @@
 ﻿using JahomWeChat.DataAccess;
-using JahomWeChat.Models;
 using JahomWeChat.Models.EntityModel;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,22 +18,9 @@ namespace JahomPersonalWechat.Common.DailyQuestionMsg
 
 		protected override void SendCore(string openId)
 		{
-			var user = jahomDBContext.User.FirstOrDefault(u => u.OpenId == openId);
-			var userTips = user.Tips.Split(' ');
-			Record record = null;
-			var recordForUser = new List<Record>();
-
-			var records = jahomDBContext.Record;
-			foreach (var uTip in userTips)
-			{
-				recordForUser.AddRange(records.Where(r => r.Tips.Contains(user.Tips)));
-			}
-
-			if (record == null)
-			{
-				var random = new Random().Next(0, records.Count() - 1);
-				record = records.OrderBy(c => c.CreateTime).Skip(random).Take(1).FirstOrDefault();
-			}
+			var records = jahomDBContext.Record.ToList();
+			var random = new Random().Next(0, records.Count() - 1);
+			var record = records.OrderBy(c => c.CreateTime).Skip(random).Take(1).FirstOrDefault();
 
 			templateMsgContent.OpenId = OpenId;
 			templateMsgContent.Url = "http://www.jahom.site/home/RecordDetail?recordId=" + record.ID;

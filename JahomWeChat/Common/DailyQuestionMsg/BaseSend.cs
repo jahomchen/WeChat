@@ -1,4 +1,5 @@
 ﻿using JahomWeChat.Common;
+using JahomWeChat.DataAccess;
 using JahomWeChat.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -18,25 +19,33 @@ namespace JahomPersonalWechat.Common.DailyQuestionMsg
 		public string Template_id = ConstString.DefaultTemplateId;
 		public TemplateMsgContent templateMsgContent = new TemplateMsgContent();
 		public string OpenId { get; set; }
+		JahomDBContext jahomDBContext = new JahomDBContext();
 
 		public void Send()
 		{
-			var lsOpenId = new List<string>();
-			var ret = UserManage.GetOpenIdListByAccessTokenNameAndOpenId(AccessTokenManage.GetAccessTokenName());
-			JObject Jo = (JObject)JsonConvert.DeserializeObject(ret);
-			JArray Jarows = JArray.Parse(Jo["data"]["openid"].ToString());
-			for (int i = 0; i < Jarows.Count; i++)
+			try
 			{
-				lsOpenId.Add(Jarows[i].ToString());
-			}
+				var lsOpenId = new List<string>();
+				var ret = UserManage.GetOpenIdListByAccessTokenNameAndOpenId(AccessTokenManage.GetAccessTokenName());
+				JObject Jo = (JObject)JsonConvert.DeserializeObject(ret);
+				JArray Jarows = JArray.Parse(Jo["data"]["openid"].ToString());
+				for (int i = 0; i < Jarows.Count; i++)
+				{
+					lsOpenId.Add(Jarows[i].ToString());
+				}
 
-			if (string.IsNullOrEmpty(OpenId))
-			{
-				lsOpenId.ForEach(p => SendCore(p));
+				if (string.IsNullOrEmpty(OpenId))
+				{
+					lsOpenId.ForEach(p => SendCore(p));
+				}
+				else
+				{
+					SendCore(lsOpenId.FirstOrDefault(p => p.ToLower() == OpenId.ToLower()));
+				}
 			}
-			else
+			catch (Exception ex)
 			{
-				SendCore(lsOpenId.FirstOrDefault(p => p.ToLower() == OpenId.ToLower()));
+				Logger.Error("给用户发送通知时失败:" + ex);
 			}
 		}
 
