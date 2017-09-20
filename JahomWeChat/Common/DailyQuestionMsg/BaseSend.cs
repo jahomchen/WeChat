@@ -19,9 +19,8 @@ namespace JahomPersonalWechat.Common.DailyQuestionMsg
 		public TemplateMsgContent templateMsgContent = new TemplateMsgContent();
 		public string OpenId { get; set; }
 
-		public List<string> Send()
+		public void Send()
 		{
-			var result = new List<string>();
 			var lsOpenId = new List<string>();
 			var ret = UserManage.GetOpenIdListByAccessTokenNameAndOpenId(AccessTokenManage.GetAccessTokenName());
 			JObject Jo = (JObject)JsonConvert.DeserializeObject(ret);
@@ -33,30 +32,20 @@ namespace JahomPersonalWechat.Common.DailyQuestionMsg
 
 			if (string.IsNullOrEmpty(OpenId))
 			{
-				lsOpenId.ForEach(p => result.AddRange(SendCore(p)));
+				lsOpenId.ForEach(p => SendCore(p));
 			}
 			else
 			{
-				result.AddRange(SendCore(lsOpenId.FirstOrDefault(p => p.ToLower() == OpenId.ToLower())));
+				SendCore(lsOpenId.FirstOrDefault(p => p.ToLower() == OpenId.ToLower()));
 			}
-
-			if (result == null || result.Count == 0)
-			{
-				result.Add("没有找到匹配的OpenId");
-			}
-
-			return result;
 		}
 
-		protected virtual List<string> SendCore(string openId)
+		protected virtual void SendCore(string openId)
 		{
-			return null;
 		}
 
-		protected List<string> ExcuteSend()
+		protected void ExcuteSend()
 		{
-			List<string> result = new List<string>();
-			
 			string responseContent = string.Empty;
 			string url = string.Format(urlSendTemplateMsg, AccessTokenManage.GetAccessTokenName());
 
@@ -69,15 +58,11 @@ namespace JahomPersonalWechat.Common.DailyQuestionMsg
 			string sendTemplateMsg = sendTemplateMsgContent.Replace("$", templateMsgContent.OpenId).Replace("#", templateMsgContent.Template_id).Replace("%", templateMsgContent.Url).Replace("*", dataTemp);
 			sendTemplateMsg = sendTemplateMsg.Remove(sendTemplateMsg.LastIndexOf('"'), 1).Remove(sendTemplateMsg.LastIndexOf(','), 1);
 			HttpManager.Request(url, out responseContent, WebRequestMethods.Http.Post, data: sendTemplateMsg);
-			while (responseContent.Contains("40001"))//token失效码
+			if (responseContent.Contains("40001"))//token失效码
 			{
 				url = string.Format(urlSendTemplateMsg, AccessTokenManage.GetAccessTokenName(true));
 				HttpManager.Request(url, out responseContent, WebRequestMethods.Http.Post, data: sendTemplateMsg);
 			}
-
-			result.Add(responseContent);
-
-			return result;
 		}
 	}
 }

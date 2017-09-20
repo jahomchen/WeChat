@@ -15,7 +15,7 @@ namespace JahomPersonalWechat.Common.DailyQuestionMsg
 			this.sendMsg = sendMsg;
 		}
 
-		public List<string> Process()
+		public void Process()
 		{
 			string sendTimeHour = System.Web.Configuration.WebConfigurationManager.AppSettings["sendTimeHour"];
 			string sendTimeMinite = System.Web.Configuration.WebConfigurationManager.AppSettings["sendTimeMinite"];
@@ -24,7 +24,7 @@ namespace JahomPersonalWechat.Common.DailyQuestionMsg
 				var now = DateTime.Now;
 				if (now.Hour.ToString() == sendTimeHour && now.Minute.ToString() == sendTimeMinite)
 				{
-					return sendMsg.Send();
+					sendMsg.Send();
 				}
 				System.Threading.Thread.Sleep(55000);
 			}

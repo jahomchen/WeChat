@@ -19,7 +19,7 @@ namespace JahomPersonalWechat.Common.DailyQuestionMsg
 			Template_id = templateId ?? Template_id;
 		}
 
-		protected override List<string> SendCore(string openId)
+		protected override void SendCore(string openId)
 		{
 			var user = jahomDBContext.User.FirstOrDefault(u => u.OpenId == openId);
 			var userTips = user.Tips.Split(' ');
@@ -47,11 +47,7 @@ namespace JahomPersonalWechat.Common.DailyQuestionMsg
 				templateMsgContent.DicKeynote = new Dictionary<string, string>();
 				templateMsgContent.DicKeynote.Add(string.Format("{0}\\n", record.Title), "#173177");
 
-				return ExcuteSend();
-			}
-			else
-			{
-				return new List<string>() { "GetSendDataInfo is Null" };
+				ExcuteSend();
 			}
 		}
 	}
