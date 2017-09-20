@@ -96,6 +96,7 @@ namespace JahomWeChat.Controllers
 			return View();
 		}
 
+		[GetUser]
 		public ActionResult AddReply(Reply reply)
 		{
 			var user = HttpContext.Items["USER"] as User;
