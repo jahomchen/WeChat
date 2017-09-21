@@ -6,6 +6,7 @@ using Lucene.Net.Index;
 using Lucene.Net.Search;
 using Lucene.Net.Store;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Web;
@@ -14,26 +15,26 @@ namespace JahomWeChat.Common
 {
 	public class LuceneNet
 	{
-		public static void CreateIndex(List<Record> records)
+		public static ConcurrentQueue<Record> RecordsForCreateIndex = new ConcurrentQueue<Record>();
+
+		public static void CreateIndex()
 		{
 			string indexPath = HttpContext.Current.Server.MapPath("~/IndexData");//索引文档保存位置
 			using (FSDirectory directory = FSDirectory.Open(new DirectoryInfo(indexPath), new NativeFSLockFactory()))
 			{
-				bool isExist = IndexReader.IndexExists(directory); //是否存在索引库文件夹以及索引库特征文件
-				if (isExist)
+				//是否存在索引库文件夹以及索引库特征文件
+				//如果索引目录被锁定（比如索引过程中程序异常退出或另一进程在操作索引库），则返回
+				var isExist = IndexReader.IndexExists(directory);
+				if (isExist && IndexWriter.IsLocked(directory))
 				{
-					//如果索引目录被锁定（比如索引过程中程序异常退出或另一进程在操作索引库），则解锁
-					//Q:存在问题 如果一个用户正在对索引库写操作 此时是上锁的 而另一个用户过来操作时 将锁解开了 于是产生冲突 --解决方法后续
-					if (IndexWriter.IsLocked(directory))
-					{
-						IndexWriter.Unlock(directory);
-					}
+					return;
 				}
 				//创建向索引库写操作对象  IndexWriter(索引目录,指定使用盘古分词进行切词,最大写入长度限制)
 				//补充:使用IndexWriter打开directory时会自动对索引库文件上锁
 				using (IndexWriter writer = new IndexWriter(directory, new PanGuAnalyzer(), !isExist, IndexWriter.MaxFieldLength.UNLIMITED))
 				{
-					foreach (var record in records)
+					Record record = null;
+					if (RecordsForCreateIndex.TryDequeue(out record))
 					{
 						//new一篇文档对象 一条记录对应索引库中的一个文档
 						Document document = new Document();
@@ -45,6 +46,7 @@ namespace JahomWeChat.Common
 						//WITH_POSITIONS_OFFSETS:指示不仅保存分割后的词 还保存词之间的距离
 						document.Add(new Field("id", record.ID.ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
 						document.Add(new Field("title", record.Title, Field.Store.YES, Field.Index.ANALYZED));
+						document.Add(new Field("summary", record.Summary, Field.Store.YES, Field.Index.NOT_ANALYZED));
 						document.Add(new Field("content", record.Content, Field.Store.NO, Field.Index.ANALYZED, Field.TermVector.WITH_POSITIONS_OFFSETS));
 
 						writer.AddDocument(document); //文档写入索引库
@@ -60,19 +62,23 @@ namespace JahomWeChat.Common
 			IndexReader reader = IndexReader.Open(directory, true);
 			IndexSearcher searcher = new IndexSearcher(reader);
 			//搜索条件
-			PhraseQuery query = new PhraseQuery();
+			BooleanQuery bQuery = new BooleanQuery();
+			PhraseQuery tQuery = new PhraseQuery();
+			PhraseQuery cQuery = new PhraseQuery();
 			//把用户输入的关键字进行分词
 			foreach (string word in SplitWords(searchKey))
 			{
-				query.Add(new Term("content", word));
+				tQuery.Add(new Term("title", word));
+				cQuery.Add(new Term("content", word));
 			}
-			//多个查询条件时 为且的关系
-			query.Slop = 100; //指定关键词相隔最大距离
+			cQuery.Slop = 100; //指定关键词相隔最大距离
+			bQuery.Add(tQuery, Occur.SHOULD);
+			bQuery.Add(cQuery, Occur.SHOULD);
 
 			//TopScoreDocCollector盛放查询结果的容器
 			TopScoreDocCollector collector = TopScoreDocCollector.Create(1000, true);
-			searcher.Search(query, null, collector);//根据query查询条件进行查询，查询结果放入collector容器
-			//TopDocs 指定0到GetTotalHits() 即所有查询结果中的文档 如果TopDocs(20,10)则意味着获取第20-30之间文档内容 达到分页的效果
+			searcher.Search(bQuery, null, collector);//根据query查询条件进行查询，查询结果放入collector容器
+													 //TopDocs 指定0到GetTotalHits() 即所有查询结果中的文档 如果TopDocs(20,10)则意味着获取第20-30之间文档内容 达到分页的效果
 			ScoreDoc[] docs = collector.TopDocs(0, collector.TotalHits).ScoreDocs;
 
 			//展示数据实体对象集合
@@ -83,7 +89,7 @@ namespace JahomWeChat.Common
 				Document doc = searcher.Doc(docId);//根据文档id来获得文档对象Document
 				var record = new Record();
 				record.Title = doc.Get("title");
-				record.Content = doc.Get("content");//未使用高亮
+				record.Summary = doc.Get("summary");
 				record.ID = Guid.Parse(doc.Get("id"));
 				records.Add(record);
 			}
@@ -92,19 +98,18 @@ namespace JahomWeChat.Common
 
 		}
 
-
-		public static string[] SplitWords(string content)
+		public static string[] SplitWords(string keyWord)
 		{
 			List<string> strList = new List<string>();
 			Analyzer analyzer = new PanGuAnalyzer();//指定使用盘古 PanGuAnalyzer 分词算法
-			TokenStream tokenStream = analyzer.TokenStream("", new StringReader(content));
+			TokenStream tokenStream = analyzer.TokenStream("", new StringReader(keyWord));
+			ITermAttribute token = null;
 			while (tokenStream.IncrementToken())
 			{
-				var term = tokenStream.GetAttribute<TermAttribute>();
-				strList.Add(term.Term); //得到分词后结果
+				token = tokenStream.GetAttribute<ITermAttribute>();
+				strList.Add(token.Term); //得到分词后结果
 			}
 			return strList.ToArray();
 		}
-
 	}
 }

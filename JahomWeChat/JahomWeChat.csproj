@@ -348,12 +348,24 @@
     <Content Include="Content\ckeditor\skins\moono-lisa\images\refresh.png" />
     <Content Include="Content\ckeditor\skins\moono-lisa\images\spinner.gif" />
     <Content Include="Content\ckeditor\styles.js" />
-    <Content Include="Dict\ChsDoubleName1.txt" />
-    <Content Include="Dict\ChsDoubleName2.txt" />
-    <Content Include="Dict\ChsSingleName.txt" />
-    <Content Include="Dict\Stopword.txt" />
-    <Content Include="Dict\Synonym.txt" />
-    <Content Include="Dict\Wildcard.txt" />
+    <Content Include="Dict\ChsDoubleName1.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Dict\ChsDoubleName2.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Dict\ChsSingleName.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Dict\Stopword.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Dict\Synonym.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Dict\Wildcard.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -372,7 +384,9 @@
     <Content Include="Content\ckeditor\samples\toolbarconfigurator\font\fontello.woff" />
     <Content Include="Content\ckeditor\samples\toolbarconfigurator\lib\codemirror\LICENSE" />
     <Content Include="Content\ckeditor\skins\moono-lisa\readme.md" />
-    <Content Include="Dict\Dict.dct" />
+    <Content Include="Dict\Dict.dct">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -403,6 +417,7 @@
     <Content Include="Views\Home\RecordDetail.cshtml" />
     <Content Include="Views\Home\Admin.cshtml" />
     <Content Include="Views\Home\AddRecordByAdmin.cshtml" />
+    <Content Include="Views\Home\GetIndex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201709180850299_jahom.resx">

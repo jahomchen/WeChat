@@ -47,6 +47,9 @@ namespace JahomWeChat.Controllers
 				record.ModifyTime = DateTime.Now;
 				jahomDBContext.Record.Add(record);
 				jahomDBContext.SaveChanges();
+
+				LuceneNet.RecordsForCreateIndex.Enqueue(record);
+				LuceneNet.CreateIndex();
 			}
 			catch (Exception ex)
 			{
@@ -126,6 +129,7 @@ namespace JahomWeChat.Controllers
 		}
 
 		[HttpPost]
+		[ValidateInput(false)]
 		public ActionResult AddRecordByAdmin(Record record)
 		{
 			var adminStr = CookieHelper.GetCookie(HttpContext);
@@ -143,12 +147,23 @@ namespace JahomWeChat.Controllers
 
 				var records = jahomDBContext.Record.OrderBy(r => r.CreateTime).ToList();
 				ViewBag.Records = records;
+
+				LuceneNet.RecordsForCreateIndex.Enqueue(record);
+				LuceneNet.CreateIndex();
+
 				return View();
 			}
 			else
 			{
 				return Content("error");
 			}
+		}
+
+		public ActionResult GetIndex(string key)
+		{
+			var records = LuceneNet.SearchFromIndex(key);
+			ViewBag.Records = records;
+			return View();
 		}
 
 	}

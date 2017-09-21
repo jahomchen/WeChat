@@ -78,7 +78,8 @@ namespace JahomWeChat.Common
 
 		public static string GetRecordSummary(string recordContent)
 		{
-			var summaryWithHtmlTag = recordContent.Substring(0, 20);
+			var lenght = recordContent.Length > 20 ? 20 : recordContent.Length;
+			var summaryWithHtmlTag = recordContent.Substring(0, lenght);
 			return System.Text.RegularExpressions.Regex.Replace(summaryWithHtmlTag, "<[^>]*>", "");
 		}
 

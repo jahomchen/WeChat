@@ -1,0 +1,16 @@
+﻿
+@{
+    ViewBag.Title = "GetIndex";
+}
+
+<h2>GetIndex</h2>
+
+@{var records = ViewBag.Records as List<JahomWeChat.Models.EntityModel.Record>;
+    foreach (var record in records)
+    {
+        <a href="~/home/RecordDetail?recordId=@record.ID">@record.Title</a> <br />
+        @record.Summary<br />
+        <hr />
+    }}
+
+
