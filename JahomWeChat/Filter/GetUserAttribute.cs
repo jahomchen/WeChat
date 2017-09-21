@@ -7,7 +7,7 @@ using System.Web.Mvc;
 
 namespace JahomWeChat.Filter
 {
-	public class GetUserAttribute:ActionFilterAttribute
+	public class GetUserAttribute : ActionFilterAttribute
 	{
 		public override void OnActionExecuting(ActionExecutingContext filterContext)
 		{
@@ -16,7 +16,12 @@ namespace JahomWeChat.Filter
 			var context = filterContext.HttpContext;
 			var code = context.Request.Params["code"];
 			var user = ControllerHelper.GetUserInfoByCodeOrCookie(context, code);
-			if (user.ID != Guid.Empty)
+			if (user == null)
+			{
+				filterContext.Result = new EmptyResult();
+				filterContext.HttpContext.Response.Write("用户不存在,请点击订阅号下面两个按钮\"我的故事\",\"写点什么\"中的任意一个,添加用户名称。");
+			}
+			else if (user.ID != Guid.Empty)
 			{
 				HttpContext.Current.Items["USER"] = user;
 			}

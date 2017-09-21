@@ -53,7 +53,11 @@ namespace JahomWeChat.Common
 			if (string.IsNullOrEmpty(code))
 			{
 				var userStr = CookieHelper.GetCookie(context);
-				return JsonConvert.DeserializeObject<User>(userStr);
+				if (!string.IsNullOrEmpty(userStr))
+				{
+					return JsonConvert.DeserializeObject<User>(userStr);
+				}
+				return null;
 			}
 			else
 			{

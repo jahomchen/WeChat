@@ -43,6 +43,8 @@ namespace JahomWeChat
 				Logger.Error(lastError.Message);
 				Logger.Error(lastError.StackTrace);
 			}
+			Server.ClearError();
+			Response.Write("网站出现错误：" + lastError.Message + "\r\n" + lastError.StackTrace);
 		}
 	}
 

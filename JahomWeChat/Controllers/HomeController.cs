@@ -86,7 +86,6 @@ namespace JahomWeChat.Controllers
 			return RedirectToAction("Index");
 		}
 
-		[GetUser]
 		public ActionResult RecordDetail(Guid recordId)
 		{
 			var record = jahomDBContext.Record.FirstOrDefault(r => r.ID == recordId);
