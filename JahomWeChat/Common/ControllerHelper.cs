@@ -78,7 +78,19 @@ namespace JahomWeChat.Common
 
 		public static string GetRecordSummary(string recordContent)
 		{
-			return recordContent.Substring(0, 10);
+			var summaryWithHtmlTag = recordContent.Substring(0, 20);
+			return System.Text.RegularExpressions.Regex.Replace(summaryWithHtmlTag, "<[^>]*>", "");
+		}
+
+		public static Record GetMatchedRecord(string openId)
+		{
+			JahomDBContext jahomDBContext = new JahomDBContext();
+
+			var records = jahomDBContext.Record.ToList();
+			var random = new Random().Next(0, records.Count() - 1);
+			var record = records.OrderBy(c => c.CreateTime).Skip(random).Take(1).FirstOrDefault();
+
+			return record;
 		}
 
 		#region 私有方法
@@ -105,6 +117,5 @@ namespace JahomWeChat.Common
 		}
 
 		#endregion
-
 	}
 }
