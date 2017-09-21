@@ -69,12 +69,16 @@
       <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="PanGu, Version=2.3.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\PanGu.2.3.1.0\lib\PanGu.dll</HintPath>
+    <Reference Include="PanGu, Version=2.3.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\PanGu.Segment.0.0.3\lib\PanGu.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PanGu.HighLight, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\PanGu.2.3.1.0\lib\PanGu.HighLight.dll</HintPath>
+      <HintPath>..\packages\PanGu.Segment.0.0.3\lib\PanGu.HighLight.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PanGu.Lucene.Analyzer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\PanGu.Lucene.Analyzer.0.0.2\lib\PanGu.Lucene.Analyzer.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -153,6 +157,7 @@
     <Compile Include="Common\DailyQuestionMsg\BaseSend.cs" />
     <Compile Include="Common\HttpManager.cs" />
     <Compile Include="Common\Logger.cs" />
+    <Compile Include="Common\LuceneNet.cs" />
     <Compile Include="Common\TicketManage.cs" />
     <Compile Include="Common\TwoDimensionCodeManage.cs" />
     <Compile Include="Common\UserManage.cs" />
@@ -343,6 +348,12 @@
     <Content Include="Content\ckeditor\skins\moono-lisa\images\refresh.png" />
     <Content Include="Content\ckeditor\skins\moono-lisa\images\spinner.gif" />
     <Content Include="Content\ckeditor\styles.js" />
+    <Content Include="Dict\ChsDoubleName1.txt" />
+    <Content Include="Dict\ChsDoubleName2.txt" />
+    <Content Include="Dict\ChsSingleName.txt" />
+    <Content Include="Dict\Stopword.txt" />
+    <Content Include="Dict\Synonym.txt" />
+    <Content Include="Dict\Wildcard.txt" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -361,6 +372,7 @@
     <Content Include="Content\ckeditor\samples\toolbarconfigurator\font\fontello.woff" />
     <Content Include="Content\ckeditor\samples\toolbarconfigurator\lib\codemirror\LICENSE" />
     <Content Include="Content\ckeditor\skins\moono-lisa\readme.md" />
+    <Content Include="Dict\Dict.dct" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -404,6 +416,9 @@
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="IndexData\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
