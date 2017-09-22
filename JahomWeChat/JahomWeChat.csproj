@@ -172,6 +172,10 @@
     <Compile Include="Migrations\201709180850299_jahom.Designer.cs">
       <DependentUpon>201709180850299_jahom.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201709220753403_jahom1.cs" />
+    <Compile Include="Migrations\201709220753403_jahom1.Designer.cs">
+      <DependentUpon>201709220753403_jahom1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccessToken.cs" />
     <Compile Include="Models\EntityModel\Record.cs" />
@@ -422,6 +426,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201709180850299_jahom.resx">
       <DependentUpon>201709180850299_jahom.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709220753403_jahom1.resx">
+      <DependentUpon>201709220753403_jahom1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

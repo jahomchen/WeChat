@@ -87,9 +87,13 @@ namespace JahomWeChat.Common
 		{
 			JahomDBContext jahomDBContext = new JahomDBContext();
 
-			var records = jahomDBContext.Record.Where(r => !r.IsCompleted).ToList();
-			var random = new Random().Next(0, records.Count() - 1);
-			var record = records.OrderBy(c => c.CreateTime).Skip(random).Take(1).FirstOrDefault();
+			var record = jahomDBContext.Record.OrderBy(r=>r.CreateTime).FirstOrDefault(r => r.IsSpecial && !r.IsCompleted);
+			if (record == null)
+			{
+				var records = jahomDBContext.Record.Where(r => !r.IsCompleted).ToList();
+				var random = new Random().Next(0, records.Count() - 1);
+				record = records.OrderBy(c => c.CreateTime).Skip(random).Take(1).FirstOrDefault();
+			}
 
 			record.IsCompleted = true;
 			jahomDBContext.SaveChanges();

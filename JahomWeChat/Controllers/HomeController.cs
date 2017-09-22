@@ -19,7 +19,7 @@ namespace JahomWeChat.Controllers
 
 		public ActionResult Index()
 		{
-			var records = jahomDBContext.Record.OrderByDescending(r => r.ModifyTime).
+			var records = jahomDBContext.Record.Where(r => r.IsCompleted).OrderByDescending(r => r.ModifyTime).
 				Select(r => (new RecordSummary() { ID = r.ID, Title = r.Title, Summary = r.Summary })).ToList();
 			ViewBag.records = records;
 			return View();

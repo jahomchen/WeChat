@@ -21,5 +21,7 @@ namespace JahomWeChat.Models.EntityModel
 		public string Summary { get; set; }
 		public string Tips { get; set; }
 		public bool IsCompleted { get; set; }
+
+		public bool IsSpecial { get; set; }
 	}
 }
