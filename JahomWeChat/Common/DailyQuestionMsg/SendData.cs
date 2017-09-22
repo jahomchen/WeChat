@@ -14,9 +14,8 @@ namespace JahomPersonalWechat.Common.DailyQuestionMsg
 			Template_id = templateId ?? Template_id;
 		}
 
-		protected override void SendCore(string openId)
+		protected override void SendCore(string openId, Record record)
 		{
-			var record = ControllerHelper.GetMatchedRecord(openId);
 			templateMsgContent.OpenId = openId;
 			templateMsgContent.Url = "http://www.jahom.site/home/RecordDetail?recordId=" + record.ID;
 			templateMsgContent.Template_id = Template_id;

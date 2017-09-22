@@ -83,13 +83,16 @@ namespace JahomWeChat.Common
 			return System.Text.RegularExpressions.Regex.Replace(summaryWithHtmlTag, "<[^>]*>", "");
 		}
 
-		public static Record GetMatchedRecord(string openId)
+		public static Record GetMatchedRecord()
 		{
 			JahomDBContext jahomDBContext = new JahomDBContext();
 
-			var records = jahomDBContext.Record.ToList();
+			var records = jahomDBContext.Record.Where(r => !r.IsCompleted).ToList();
 			var random = new Random().Next(0, records.Count() - 1);
 			var record = records.OrderBy(c => c.CreateTime).Skip(random).Take(1).FirstOrDefault();
+
+			record.IsCompleted = true;
+			jahomDBContext.SaveChanges();
 
 			return record;
 		}

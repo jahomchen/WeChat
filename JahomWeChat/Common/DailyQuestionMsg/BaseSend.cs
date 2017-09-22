@@ -1,6 +1,7 @@
 ﻿using JahomWeChat.Common;
 using JahomWeChat.DataAccess;
 using JahomWeChat.Models;
+using JahomWeChat.Models.EntityModel;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -29,8 +30,8 @@ namespace JahomPersonalWechat.Common.DailyQuestionMsg
 				{
 					lsOpenId.Add(Jarows[i].ToString());
 				}
-
-				lsOpenId.ForEach(p => SendCore(p));
+				var record = ControllerHelper.GetMatchedRecord();
+				lsOpenId.ForEach(p => SendCore(p, record));
 			}
 			catch (Exception ex)
 			{
@@ -38,7 +39,7 @@ namespace JahomPersonalWechat.Common.DailyQuestionMsg
 			}
 		}
 
-		protected virtual void SendCore(string openId)
+		protected virtual void SendCore(string openId, Record record)
 		{
 		}
 

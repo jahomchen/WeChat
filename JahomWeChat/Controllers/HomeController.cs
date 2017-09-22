@@ -19,7 +19,7 @@ namespace JahomWeChat.Controllers
 
 		public ActionResult Index()
 		{
-			var records = jahomDBContext.Record.Where(r => r.IsCompleted).OrderByDescending(r => r.ModifyTime).
+			var records = jahomDBContext.Record.OrderByDescending(r => r.ModifyTime).
 				Select(r => (new RecordSummary() { ID = r.ID, Title = r.Title, Summary = r.Summary })).ToList();
 			ViewBag.records = records;
 			return View();
@@ -39,7 +39,6 @@ namespace JahomWeChat.Controllers
 			try
 			{
 				var user = HttpContext.Items["USER"] as User;
-				record.IsCompleted = true;
 				record.UserId = user.ID;
 				record.UserName = user.UserName;
 				record.Summary = ControllerHelper.GetRecordSummary(record.Content);
@@ -65,7 +64,7 @@ namespace JahomWeChat.Controllers
 		{
 			var user = HttpContext.Items["USER"] as User;
 			ViewBag.Sign = user.Sign;
-			var records = jahomDBContext.Record.Where(r => r.UserId == user.ID && r.IsCompleted).
+			var records = jahomDBContext.Record.Where(r => r.UserId == user.ID).
 				OrderByDescending(r => r.ModifyTime).Select(r => (new RecordSummary() { ID = r.ID, Title = r.Title, Summary = r.Summary })).ToList();
 			ViewBag.records = records;
 			return View();
@@ -136,7 +135,6 @@ namespace JahomWeChat.Controllers
 			if (!string.IsNullOrEmpty(adminStr))
 			{
 				var admin = JsonConvert.DeserializeObject<User>(adminStr);
-				record.IsCompleted = true;
 				record.UserId = admin.ID;
 				record.UserName = admin.UserName;
 				record.Summary = ControllerHelper.GetRecordSummary(record.Content);
