@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Xml;
 
@@ -80,7 +81,8 @@ namespace JahomWeChat.Common
 		{
 			var lenght = recordContent.Length > 20 ? 20 : recordContent.Length;
 			var summaryWithHtmlTag = recordContent.Substring(0, lenght);
-			return System.Text.RegularExpressions.Regex.Replace(summaryWithHtmlTag, "<[^>]*>", "");
+			var tempStr= Regex.Replace(summaryWithHtmlTag, "<[^>]*>", "");
+			return Regex.Replace(tempStr, "&[^;]+;", "");
 		}
 
 		public static Record GetMatchedRecord()

@@ -21,6 +21,8 @@ namespace JahomWeChat
 			RouteConfig.RegisterRoutes(RouteTable.Routes);
 			BundleConfig.RegisterBundles(BundleTable.Bundles);
 
+			Logger.Error("网站启动了:" + DateTime.Now);
+
 			AccessTokenManage.GetAccessTokenName(true);
 			ButtonHelp.InitButton();
 

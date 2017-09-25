@@ -36,25 +36,17 @@ namespace JahomWeChat.Controllers
 		[ValidateInput(false)]
 		public ActionResult AddSomething(Record record)
 		{
-			try
-			{
-				var user = HttpContext.Items["USER"] as User;
-				record.UserId = user.ID;
-				record.UserName = user.UserName;
-				record.Summary = ControllerHelper.GetRecordSummary(record.Content);
-				record.CreateTime = DateTime.Now;
-				record.ModifyTime = DateTime.Now;
-				jahomDBContext.Record.Add(record);
-				jahomDBContext.SaveChanges();
+			var user = HttpContext.Items["USER"] as User;
+			record.UserId = user.ID;
+			record.UserName = user.UserName;
+			record.Summary = ControllerHelper.GetRecordSummary(record.Content);
+			record.CreateTime = DateTime.Now;
+			record.ModifyTime = DateTime.Now;
+			jahomDBContext.Record.Add(record);
+			jahomDBContext.SaveChanges();
 
-				LuceneNet.RecordsForCreateIndex.Enqueue(record);
-				LuceneNet.CreateIndex();
-			}
-			catch (Exception ex)
-			{
-				Logger.Error(ex.Message);
-				Logger.Error(ex.StackTrace);
-			}
+			LuceneNet.RecordsForCreateIndex.Enqueue(record);
+			LuceneNet.CreateIndex();
 
 			return RedirectToAction("MyStory");
 		}
