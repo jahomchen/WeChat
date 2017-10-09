@@ -29,9 +29,16 @@ namespace JahomWeChat.Common
 			return tokenRedisStr.ToString();
 		}
 
-		public static AccessToken GetAccessTokenNameByCode(string code)
+		public static string GetOpenIdByCode(string code)
 		{
-			return CreateAccessToken(code);
+			var opendId = HttpRuntime.Cache.Get(code);
+			if (opendId == null)
+			{
+				opendId = CreateAccessToken(code).openId;
+				HttpRuntime.Cache.Insert(code, opendId, null, DateTime.Now.AddSeconds(7000), Cache.NoSlidingExpiration);
+			}
+
+			return opendId.ToString();
 		}
 
 		static AccessToken CreateAccessToken(string code = null)
@@ -41,7 +48,7 @@ namespace JahomWeChat.Common
 			byte[] data = null;
 			string url = string.IsNullOrEmpty(code) ? string.Format(urlGetAccessTokenName, ConstString.AppId, ConstString.AppSecret) : string.Format(urlGetAccessTokenNameByCode, ConstString.AppId, ConstString.AppSecret, code);
 			bool ret = HttpManager.Request(url, out responseContent, WebRequestMethods.Http.Get, data: data);
-			if (!string.IsNullOrWhiteSpace(responseContent))
+			if (!string.IsNullOrEmpty(responseContent))
 			{
 				accessToken = new AccessToken();
 				accessToken = JsonConvert.DeserializeAnonymousType(responseContent, accessToken);

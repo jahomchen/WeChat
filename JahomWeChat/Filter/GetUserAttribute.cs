@@ -19,16 +19,16 @@ namespace JahomWeChat.Filter
 			if (user == null)
 			{
 				filterContext.Result = new EmptyResult();
-				filterContext.HttpContext.Response.Write("用户不存在,请点击订阅号下面两个按钮\"我的故事\",\"写点什么\"中的任意一个,添加用户名称。");
+				filterContext.HttpContext.Response.Write("用户不存在,请点击订阅号下面两个按钮\"我的故事\",\"写点什么\"中的任意一个,添加用户名称.");
 			}
-			else if (user.ID != Guid.Empty)
-			{
-				HttpContext.Current.Items["USER"] = user;
-			}
-			else
+			else if (user.ID == Guid.Empty)
 			{
 				filterContext.Result = new EmptyResult();
 				filterContext.HttpContext.Response.Redirect("~/Home/AddUser?openId=" + user.OpenId);
+			}
+			else
+			{
+				HttpContext.Current.Items["USER"] = user;
 			}
 		}
 	}

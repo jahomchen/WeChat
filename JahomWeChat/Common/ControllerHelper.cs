@@ -62,15 +62,15 @@ namespace JahomWeChat.Common
 			}
 			else
 			{
-				AccessToken accToken = AccessTokenManage.GetAccessTokenNameByCode(code);
-				User user = jahomDBContext.User.FirstOrDefault(u => u.OpenId == accToken.openId);
+				var openId = AccessTokenManage.GetOpenIdByCode(code);
+				User user = jahomDBContext.User.FirstOrDefault(u => u.OpenId == openId);
 				if (user != null)
 				{
 					CookieHelper.SetCookie(context, JsonConvert.SerializeObject(user));
 				}
 				else
 				{
-					user = new User() { OpenId = accToken.openId };
+					user = new User() { OpenId = openId };
 				}
 
 				return user;
