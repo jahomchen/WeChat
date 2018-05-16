@@ -17,7 +17,7 @@ namespace JahomPersonalWechat.Common.DailyQuestionMsg
 		protected override void SendCore(string openId, Record record)
 		{
 			templateMsgContent.OpenId = openId;
-			templateMsgContent.Url = "http://www.jahom.site/home/RecordDetail?recordId=" + record.ID;
+			templateMsgContent.Url = "http://www.jahom.site/home/RecordDetail?recordId=" + record.ID + "&openId=" + openId;
 			templateMsgContent.Template_id = Template_id;
 			templateMsgContent.DicFirst = new Dictionary<string, string>();
 			templateMsgContent.DicFirst.Add(string.Format("{0}\\n", record.Title), "#173177");

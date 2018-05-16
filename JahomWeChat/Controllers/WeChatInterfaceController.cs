@@ -19,6 +19,7 @@ namespace JahomWeChat.Controllers
 				if (!string.IsNullOrEmpty(postStr))
 				{
 					result = ControllerHelper.ResponseMsg(postStr);
+					Logger.Record(postStr);
 				}
 			}
 			else

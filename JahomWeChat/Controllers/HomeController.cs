@@ -80,12 +80,15 @@ namespace JahomWeChat.Controllers
 			return RedirectToAction("Index");
 		}
 
-		public ActionResult RecordDetail(Guid recordId)
+		public ActionResult RecordDetail(Guid recordId,string openId)
 		{
 			var record = jahomDBContext.Record.FirstOrDefault(r => r.ID == recordId);
 			ViewBag.record = record;
 			var replys = jahomDBContext.Reply.Where(r => r.RecordId == record.ID).ToList();
 			ViewBag.Relpys = replys;
+
+			Logger.Record(record.Title + ":被查看了，查看着信息：" + string.Join(";", Request.UserAgent, Request.UserHostAddress, openId));
+
 			return View();
 		}
 

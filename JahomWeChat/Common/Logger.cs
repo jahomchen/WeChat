@@ -21,5 +21,18 @@ namespace JahomWeChat.Common
 			File.AppendAllText(directoryPath + @"\" + fileName, DateTime.Now + ": " + errorStr + "\r\n", Encoding.UTF8);
 
 		}
+
+		public static void Record(string recordStr)
+		{
+			var directoryPath = @"c:\error\";
+			var fileName = "Record.txt";
+
+			if (!Directory.Exists(directoryPath))
+			{
+				Directory.CreateDirectory(directoryPath);
+			}
+			File.AppendAllText(directoryPath + @"\" + fileName, DateTime.Now + ": " + recordStr + "\r\n\r\n", Encoding.UTF8);
+
+		}
 	}
 }
