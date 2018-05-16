@@ -19,7 +19,7 @@ namespace JahomWeChat.Filter
 			if (user == null)
 			{
 				filterContext.Result = new EmptyResult();
-				filterContext.HttpContext.Response.Write("<p>用户不存在,请点击订阅号下面两个按钮\"我的故事\",\"写点什么\"中的任意一个,添加用户名称.</p>");
+				filterContext.HttpContext.Response.Write("<h1>第一次使用请进行简单的注册,点击订阅号下面两个按钮\"我的故事\",\"写点什么\"中的任意一个,添加用户.</h1>");
 			}
 			else if (user.ID == Guid.Empty)
 			{
